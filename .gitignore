@@ -1,6 +1,7 @@
 *.env
 *results.json
 *visible_html_orders.html
+execution_script.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
