@@ -1,3 +1,6 @@
+*.env
+*results.json
+*visible_html_orders.html
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
