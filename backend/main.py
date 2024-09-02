@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from process import process_form
-from fastapi.middleware.cors import CORSMiddleware  
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -16,6 +16,10 @@ app.add_middleware(
 class FormData(BaseModel):
     user_info: str
     form_url: str
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Form Processing API"}
 
 @app.post('https://shark-033.github.io/web-agent/form')  # Changed to a relative path
 async def submit_form(data: FormData):
