@@ -1,91 +1,119 @@
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+from selenium import webdriver
 import os
-import json
-from dotenv import load_dotenv
-from groq import Groq
-import re
 import time
+from dotenv import load_dotenv
+from utils import click
+import re
+import json
 
 load_dotenv()
 
-def initialize_client():
-    return Groq(api_key=os.environ.get("GROQ_API_KEY"))
-
 def read_html_file(file_path):
-    with open(file_path, 'r') as file:
-        return file.read()
+    with open(file_path, "r") as f:
+        return f.read()
 
-def create_prompt(html_content):
-    return f"""
-    This is the HTML of a Google Form consisting of questions, options, and input text boxes. Extract all the questions and return them as a JSON object. For each question, include:
-    - Relative XPath to the question (similar to the format in the examples below)
-    - The question's HTML element (the innermost one that contains the data, i.e., the span classes)
-    - If the answer is a text input, include its HTML (the innermost one that contains the data, i.e., the span classes)
-    - If the answer consists of radio buttons or multiselect options, return all of its options' HTML (the innermost one that contains the data, i.e., the span classes)
+def write_to_file(file_path, content, as_json=False):
+    with open(file_path, "w") as f:
+        if as_json:
+            json.dump(content, f, indent=4)
+        else:
+            f.write(content)
 
-    XPath examples for options:
-    "//span[@class='aDTYNe snByac OvPDhc OIC90c' and text()='...']"
-    "//div[@class='Zki2Ve' and text()='.']"
-
-    XPath examples for text inputs:
-    "//input[@type='text' and @aria-labelledby='i46']"
-    "//input[@type='email' and @aria-labelledby='i54']"
-
-    Please format the XPaths in a similar manner to these examples.
-
-    HTML content:
-    {html_content}
-    """
-
-def get_chat_completion(client, prompt):
-    return client.chat.completions.create(
-        messages=[
-            {
-                "role": "system",
-                "content": "Output only JSON with questions, options, and input text boxes as described above."
-            },
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
-        model="llama-3.1-8b-instant",
-    )
-
-def extract_json_from_response(content):
-    json_match = re.search(r'```(?:json)?\s*(\{.*?\}|\[.*?\])\s*```', content, re.DOTALL)
+def extract_json_from_response(response):
+    json_pattern = re.compile(r'```json\s*(.*?)\s*```', re.DOTALL)
+    json_match = json_pattern.search(response)
     if json_match:
-        try:
-            return json.loads(json_match.group(1))
-        except json.decoder.JSONDecodeError as e:
-            print(f"JSONDecodeError: {e}")
-            return None
+        return json.loads(json_match.group(1))
     else:
-        print("No valid JSON found in the response")
+        print("No JSON content found in the string.")
         return None
 
-def save_json_to_file(data, file_path):
-    with open(file_path, 'w') as json_file:
-        json.dump(data, json_file, indent=4)
+def generate_prompt_gemini(visible_html):
+    return f"""This is the HTML of a Google form consisting of questions, options, and input text boxes. Extract all the questions.
+    While returning questions, for each of them include:
+    - The question's HTML element (the innermost one that contains the data, e.g., the span classes)
+    - If the answer to be filled is a text input, include its HTML (the innermost one that contains the data, e.g., the span classes)
+    - If the answer to be filled are radio buttons or multiselect options, return all of its options' HTML (the innermost one that contains the data, e.g., the span classes)
+    The HTML of the page is: 
+    {visible_html}"""
 
-def process_html_to_json(html_file_path, output_json_path):
-    client = initialize_client()
-    html_content = read_html_file(html_file_path)
-    prompt = create_prompt(html_content)
+def generate_prompt_to_answer(response, user_info):
+    return f"""A user is trying to fill a Google form that has the following questions, answers, and options:
+    {response}
+
+    The user has provided this information: 
+    {user_info}
+
+    Based on the above information, can you determine what answers the user would have chosen for each question?
+
+    Return questions, options/answers (include HTML), and XPath in JSON format.
+    Note:
+    - For text and email inputs, specify the option HTML, text content, and XPath that needs to be filled.
+    - xpath shouldnt contain contains(text())
+
+    The JSON format should be like this:
+    [
+    ## For clickable options
+    {{"question": "",
+    "selected_options":[
+    {{"html":"","xpath":""}}
+    ],}}
+    ## For text inputs and email inputs
+    {{"question": "",
+    "text_input":{{
+    "textcontent":"",
+    "html":"","xpath":""
+    }}
+    }}]
+    """
+
+def process_form(user_info, form_url):
+    visible_html = read_html_file("visible_html_orders.html")
+
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
+    prompt_gemini = generate_prompt_gemini(visible_html)
     
-    max_retries = 5
-    for attempt in range(max_retries):
-        chat_completion = get_chat_completion(client, prompt)
-        content = chat_completion.choices[0].message.content
-        
-        chat_completion_dict = extract_json_from_response(content)
-        if chat_completion_dict:
-            save_json_to_file(chat_completion_dict, output_json_path)
-            break
-        else:
-            print(f"Attempt {attempt + 1} failed, retrying...")
-            time.sleep(2)  # Optional: wait for 2 seconds before retrying
-    else:
-        print("Max retries reached. Failed to get valid JSON.")
+    start = time.time()
+    response = llm.invoke(prompt_gemini).content
+    print("time taken by gemini", time.time() - start)
+    
+    write_to_file("gemini_response.json", response, as_json=True)
 
+    prompt_to_answer = generate_prompt_to_answer(response, user_info)
+    llm2 = ChatOpenAI(model="gpt-4o-mini")
+    answers = llm2.invoke(prompt_to_answer).content
 
-process_html_to_json("visible_html_orders.html","init.json")
+    data = extract_json_from_response(answers)
+    if data:
+        write_to_file("answers.json", data, as_json=True)
+
+        xpaths_options_list = []
+        xpaths_text_list = {}
+
+        for item in data:
+            question = item.get("question", "")
+            if "selected_options" in item:
+                for option in item["selected_options"]:
+                    xpaths_options_list.append(option["xpath"])
+            elif "text_input" in item and item["text_input"] is not None:
+                xpaths_text_list[item["text_input"]["xpath"]] = item["text_input"]["textcontent"]
+
+        print("xpaths_options_list =", xpaths_options_list)
+        print("xpaths_text_list =", xpaths_text_list)
+
+        xpaths_data = {
+            "xpaths_options_list": xpaths_options_list,
+            "xpaths_text_list": xpaths_text_list
+        }
+        write_to_file("xpaths.json", xpaths_data, as_json=True)
+
+        click(xpaths_options_list, xpaths_text_list, form_url)
+
+if __name__ == "__main__":
+    user_info = """Hey, I am an existing customer, and I want to order pens and notebooks of red and blue colors. 
+    Quantity of the items should be 4. As per details about me, I’m Kavan, and I’m available at 9548565487 / kavan@gmail.com. Preferred mode of communication is either phone or email."""
+    form_url = 'https://docs.google.com/forms/d/e/1FAIpQLSd9gli7KqnYFNkrc_PWNxvmhi7ZJz2jPp0qTsceqT7lkIBo2Q/viewform'
+    process_form(user_info, form_url)
+

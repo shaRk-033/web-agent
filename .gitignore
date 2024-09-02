@@ -1,7 +1,9 @@
 *.env
-*results.json
 *visible_html_orders.html
-execution_script.py
+*answers.json
+*gemini_response.json
+*xpaths.json
+*.ds_store
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
