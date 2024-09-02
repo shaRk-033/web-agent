@@ -17,7 +17,7 @@ class FormData(BaseModel):
     user_info: str
     form_url: str
 
-@app.post('https://shark-033.github.io/web-agent/form')  # Ensure this is POST
+@app.post('https://shark-033.github.io/web-agent/form')  # Changed to a relative path
 async def submit_form(data: FormData):
     user_info = data.user_info
     form_url = data.form_url
@@ -31,4 +31,4 @@ async def submit_form(data: FormData):
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
