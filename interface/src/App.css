@@ -1,0 +1,96 @@
+.App {
+  text-align: center;
+  background-color: #000000; /* Changed background color to pitch black */
+  transition: all 0.3s ease; /* Added transition effect for all elements */
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #1e1e2f; /* Darker background for header */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #ffffff; /* White text for better readability */
+  transition: all 0.3s ease; /* Added transition effect for all elements */
+}
+
+.App-link {
+  color: #ff6f61; /* Softer link color */
+}
+
+.input-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 1; /* Changed from 0 to 1 to make the input container visible */
+  /* Removed transform and transition properties related to scrolling */
+}
+
+.App-input, .App-textarea {
+  width: 80%;
+  max-width: 500px;
+  margin: 10px 0;
+  padding: 12px 15px; /* Increased padding for better aesthetics */
+  font-size: 1rem;
+  border: 1px solid #343a40; /* Changed border color to a darker shade */
+  border-radius: 8px; /* Increased border radius for rounded corners */
+  background-color: #495057; /* Changed to a darker background color for inputs */
+  color: #ffffff; /* Changed text color to white for better contrast */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
+}
+
+.App-input:focus, .App-textarea:focus {
+  border-color: #80bdff; /* Blue border on focus */
+  box-shadow: 0 0 8px rgba(128, 189, 255, 0.5); /* Glow effect on focus */
+}
+
+.App-input::placeholder, .App-textarea::placeholder {
+  color: #6c757d; /* Softer placeholder color */
+}
+
+.App-button {
+  background-color: #ff6f61; /* Vibrant background color */
+  color: #ffffff; /* White text color */
+  padding: 12px 20px; /* Adequate padding for better aesthetics */
+  border: none; /* Remove default border */
+  border-radius: 8px; /* Rounded corners */
+  font-size: 1rem; /* Standard font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+}
+
+.App-button:hover {
+  background-color: #e65b54; /* Slightly darker shade on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
+}
+
+.App-title {
+  font-size: 3rem;
+  animation: fadeIn 2s ease-in-out;
+}
+
+.App-description {
+  font-size: 1.5rem;
+  text-transform: lowercase;
+  margin-bottom: 20px;
+  animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
+.App, .App-header, .App-input, .App-textarea, .App-button, .App-title, .App-description {
+  transition: opacity 0.5s ease-in-out; /* Added transition effect for all elements */
+}

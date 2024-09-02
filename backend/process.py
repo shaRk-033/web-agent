@@ -5,6 +5,7 @@ import os
 import time
 from dotenv import load_dotenv
 from utils import click
+from get_html import get_html
 import re
 import json
 
@@ -71,7 +72,9 @@ def generate_prompt_to_answer(response, user_info):
     """
 
 def process_form(user_info, form_url):
-    visible_html = read_html_file("visible_html_orders.html")
+
+    get_html(form_url)
+    visible_html = read_html_file("form.html")
 
     llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
     prompt_gemini = generate_prompt_gemini(visible_html)
@@ -112,9 +115,9 @@ def process_form(user_info, form_url):
 
         click(xpaths_options_list, xpaths_text_list, form_url)
 
-if __name__ == "__main__":
-    user_info = """Hey, I am an existing customer, and I want to order pens and notebooks of red and blue colors. 
-    Quantity of the items should be 4. As per details about me, I’m Kavan, and I’m available at 9548565487 / kavan@gmail.com. Preferred mode of communication is either phone or email."""
-    form_url = 'https://docs.google.com/forms/d/e/1FAIpQLSd9gli7KqnYFNkrc_PWNxvmhi7ZJz2jPp0qTsceqT7lkIBo2Q/viewform'
-    process_form(user_info, form_url)
+# if __name__ == "__main__":
+#     user_info = """Hey, I am an existing customer, and I want to order pens and notebooks of red and blue colors. 
+#     Quantity of the items should be 4. As per details about me, I’m Kavan, and I’m available at 9548565487 / kavan@gmail.com. Preferred mode of communication is either phone or email."""
+#     form_url = 'https://docs.google.com/forms/d/e/1FAIpQLSd9gli7KqnYFNkrc_PWNxvmhi7ZJz2jPp0qTsceqT7lkIBo2Q/viewform'
+#     process_form(user_info, form_url)
 

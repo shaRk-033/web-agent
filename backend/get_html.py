@@ -9,7 +9,7 @@ def get_html(form_url):
         time.sleep(1)
         visible_html = driver.execute_script("return document.body.innerHTML;")
 
-        with open("visible_html_orders.html", "w") as f:
+        with open("form.html", "w") as f:
             f.write(visible_html)
         
         return visible_html 
