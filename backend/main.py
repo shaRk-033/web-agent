@@ -17,7 +17,7 @@ class FormData(BaseModel):
     user_info: str
     form_url: str
 
-@app.post('/form')  # Ensure this is POST
+@app.post('https://shark-033.github.io/web-agent/form')  # Ensure this is POST
 async def submit_form(data: FormData):
     user_info = data.user_info
     form_url = data.form_url

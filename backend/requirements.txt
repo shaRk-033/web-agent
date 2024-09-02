@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+pydantic
+selenium
+python-dotenv
+langchain-google-genai
+langchain-openai
