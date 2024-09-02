@@ -19,6 +19,10 @@ Web Agent is an AI-powered tool designed to navigate websites and fill out forms
   - `get_html.py`: Selenium-based HTML retrieval
   - `utils.py`: Utility functions for web interaction
 
+## Flow Diagram
+
+![Web Agent Flow Diagram](flowdiagram.png)
+
 ## Setup Instructions
 
 1. Clone the repository:
