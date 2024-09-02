@@ -49,9 +49,10 @@ def generate_prompt_to_answer(response, user_info):
     Based on the above information, can you determine what answers the user would have chosen for each question?
 
     Return questions, options/answers (include HTML), and XPath in JSON format.
-    Note:
-    - For text and email inputs, specify the option HTML, text content, and XPath that needs to be filled.
+    Rules:
     - xpath shouldnt contain contains(text())
+    - For text and email inputs, specify the option HTML, text content, and XPath(with @aria-labelledby) that needs to be filled.
+   
 
     The JSON format should be like this:
     [

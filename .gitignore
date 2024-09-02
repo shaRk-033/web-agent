@@ -4,6 +4,7 @@
 *gemini_response.json
 *xpaths.json
 *.ds_store
+screenshots/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
