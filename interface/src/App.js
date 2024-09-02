@@ -11,7 +11,7 @@ function App() {
     console.log('Requirements:', requirements);
 
     // New code to post data as JSON
-    fetch('http://127.0.0.1:8000/form', {  // Ensure the URL matches the FastAPI endpoint
+    fetch('/form', {  // Ensure the URL matches the FastAPI endpoint
       method: 'POST',  // Ensure the method is POST
       headers: {
         'Content-Type': 'application/json',
