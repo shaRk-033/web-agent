@@ -1,3 +1,4 @@
+import asyncio
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from selenium import webdriver
@@ -42,56 +43,55 @@ def generate_prompt_gemini(visible_html):
 
 def generate_prompt_to_answer(response, user_info):
     return f"""A user is trying to fill a Google form that has the following questions, answers, and options:
-    {response}
+{response}
 
-    The user has provided this information: 
-    {user_info}
+The user has provided the following info: 
+{user_info}
+Based on this info, can you say what answers they would have selected for each question?
 
-    Based on the above information, can you determine what answers the user would have chosen for each question?
+Return questions, options/answers (include HTML), and XPath in JSON format.
+Note:
+- For text and email inputs, specify option HTML, text content, and XPath that needs to be filled.
 
-    Return questions, options/answers (include HTML), and XPath in JSON format.
-    Rules:
-    - xpath shouldnt contain contains(text())
-    - For text and email inputs, specify the option HTML, text content, and XPath(with @aria-labelledby) that needs to be filled.
-   
+The JSON format should be like this:
+[
+## For clickable options
+{{"question": "",
+  "selected_options":[
+  {{"html":"","xpath":""}}
+  ]
+}},
+## For text inputs and email inputs
+{{"question": "",
+  "text_input":{{
+  "textcontent":"",
+  "html":"","xpath":""
+  }}
+}}
+]
+"""
 
-    The JSON format should be like this:
-    [
-    ## For clickable options
-    {{"question": "",
-    "selected_options":[
-    {{"html":"","xpath":""}}
-    ],}}
-    ## For text inputs and email inputs
-    {{"question": "",
-    "text_input":{{
-    "textcontent":"",
-    "html":"","xpath":""
-    }}
-    }}]
-    """
-
-def process_form(user_info, form_url):
-
-    get_html(form_url)
-    visible_html = read_html_file("form.html")
-
+async def process_form(user_info, form_url):
+    visible_html = await asyncio.to_thread(get_html, form_url)
+    
     llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
     prompt_gemini = generate_prompt_gemini(visible_html)
     
     start = time.time()
-    response = llm.invoke(prompt_gemini).content
+    response = await asyncio.to_thread(llm.invoke, prompt_gemini)
+    response_content = response.content
     print("time taken by gemini", time.time() - start)
     
-    write_to_file("gemini_response.json", response, as_json=True)
+    await asyncio.to_thread(write_to_file, "gemini_response.json", response_content, as_json=True)
 
-    prompt_to_answer = generate_prompt_to_answer(response, user_info)
+    prompt_to_answer = generate_prompt_to_answer(response_content, user_info)
     llm2 = ChatOpenAI(model="gpt-4o-mini")
-    answers = llm2.invoke(prompt_to_answer).content
+    answers = await asyncio.to_thread(llm2.invoke, prompt_to_answer)
+    answers_content = answers.content
 
-    data = extract_json_from_response(answers)
+    data = extract_json_from_response(answers_content)
     if data:
-        write_to_file("answers.json", data, as_json=True)
+        await asyncio.to_thread(write_to_file, "answers.json", data, as_json=True)
 
         xpaths_options_list = []
         xpaths_text_list = {}
@@ -111,13 +111,6 @@ def process_form(user_info, form_url):
             "xpaths_options_list": xpaths_options_list,
             "xpaths_text_list": xpaths_text_list
         }
-        write_to_file("xpaths.json", xpaths_data, as_json=True)
+        await asyncio.to_thread(write_to_file, "xpaths.json", xpaths_data, as_json=True)
 
-        click(xpaths_options_list, xpaths_text_list, form_url)
-
-# if __name__ == "__main__":
-#     user_info = """Hey, I am an existing customer, and I want to order pens and notebooks of red and blue colors. 
-#     Quantity of the items should be 4. As per details about me, I’m Kavan, and I’m available at 9548565487 / kavan@gmail.com. Preferred mode of communication is either phone or email."""
-#     form_url = 'https://docs.google.com/forms/d/e/1FAIpQLSd9gli7KqnYFNkrc_PWNxvmhi7ZJz2jPp0qTsceqT7lkIBo2Q/viewform'
-#     process_form(user_info, form_url)
-
+        await asyncio.to_thread(click, xpaths_options_list, xpaths_text_list, form_url)

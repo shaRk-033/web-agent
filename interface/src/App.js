@@ -1,34 +1,42 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
 
 function App() {
-  const [formLink, setFormLink] = useState('');
-  const [requirements, setRequirements] = useState('');
+  const [formLink, setFormLink] = useState("");
+  const [requirements, setRequirements] = useState("");
+  const [status, setStatus] = useState("idle"); // New state: 'idle', 'processing', or 'success'
 
   const handleSubmit = () => {
-    // Handle the submit action
-    console.log('Form Link:', formLink);
-    console.log('Requirements:', requirements);
+    setStatus("processing");
 
-    // New code to post data as JSON
-    fetch('/form', {  // Ensure the URL matches the FastAPI endpoint
-      method: 'POST',  // Ensure the method is POST
+    fetch("http://127.0.0.1:8000/form", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({  // Update the keys to match FormData model
-        user_info: requirements,  // Assuming requirements is user_info
-        form_url: formLink,       // Assuming formLink is form_url
+      body: JSON.stringify({
+        user_info: requirements,
+        form_url: formLink,
       }),
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => console.log('Success:', data))
-    .catch((error) => console.error('Error:', error));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Success:", data);
+        setStatus("success");
+        setFormLink(""); 
+        setRequirements(""); 
+        setTimeout(() => setStatus("idle"), 3000);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setStatus("error"); 
+        setTimeout(() => setStatus("idle"), 3000);
+      });
   };
 
   return (
@@ -51,13 +59,22 @@ function App() {
             onChange={(e) => setRequirements(e.target.value)}
             className="App-textarea"
           />
-          <button
-            onClick={handleSubmit}
-            className="App-button"
-          >
-            Submit
+          <button onClick={handleSubmit} className="App-button" disabled={status === "processing"}>
+            {status === "processing" ? "Processing..." : "Submit"}
           </button>
         </div>
+
+        {status === "processing" && (
+          <div className="spinner"></div>
+        )}
+
+        {status === "success" && (
+          <div className="success-animation">Success!</div>
+        )}
+
+        {status === "error" && (
+          <div className="error-animation">An error occurred. Please try again.</div>
+        )}
       </header>
     </div>
   );

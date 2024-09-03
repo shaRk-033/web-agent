@@ -1,19 +1,19 @@
-{"type": "load", "url": "https://docs.google.com/forms/d/e/1FAIpQLSd9gli7KqnYFNkrc_PWNxvmhi7ZJz2jPp0qTsceqT7lkIBo2Q/viewform", "timestamp": 1725291303.204295, "screenshot": "screenshots/page_load.png"}
-{"type": "scroll", "scrollY": 180, "timestamp": 1725291303.530514, "screenshot": "screenshots/scroll_0.png"}
-{"type": "click", "xpath": "//span[@class='aDTYNe snByac OvPDhc OIC90c' and text()='I am an existing customer']", "timestamp": 1725291304.336434, "screenshot": "screenshots/element_click_0.png"}
-{"type": "click", "xpath": "//span[@class='aDTYNe snByac n5vBHf OIC90c' and text()='Pen']", "timestamp": 1725291304.58539, "screenshot": "screenshots/element_click_1.png"}
-{"type": "click", "xpath": "//span[@class='aDTYNe snByac n5vBHf OIC90c' and text()='Notebook']", "timestamp": 1725291304.885488, "screenshot": "screenshots/element_click_2.png"}
-{"type": "click", "xpath": "//span[@class='aDTYNe snByac n5vBHf OIC90c' and text()='Red']", "timestamp": 1725291305.137048, "screenshot": "screenshots/element_click_3.png"}
-{"type": "click", "xpath": "//span[@class='aDTYNe snByac n5vBHf OIC90c' and text()='Blue']", "timestamp": 1725291305.5608451, "screenshot": "screenshots/element_click_4.png"}
-{"type": "click", "xpath": "//div[@class='Zki2Ve' and text()='4']", "timestamp": 1725291305.822547, "screenshot": "screenshots/element_click_5.png"}
-{"type": "click", "xpath": "//span[@class='aDTYNe snByac n5vBHf OIC90c' and text()='Phone']", "timestamp": 1725291306.046546, "screenshot": "screenshots/element_click_6.png"}
-{"type": "click", "xpath": "//span[@class='aDTYNe snByac n5vBHf OIC90c' and text()='Email']", "timestamp": 1725291306.257897, "screenshot": "screenshots/element_click_7.png"}
-{"type": "textInput", "xpath": "//input[@aria-labelledby='i46']", "text": "Kavan", "timestamp": 1725291306.6516988, "screenshot": "screenshots/text_input_8.png"}
-{"type": "textInput", "xpath": "//input[@aria-labelledby='i50']", "text": "9548565487", "timestamp": 1725291306.94853, "screenshot": "screenshots/text_input_9.png"}
-{"type": "textInput", "xpath": "//input[@aria-labelledby='i54']", "text": "kavan@gmail.com", "timestamp": 1725291307.259965, "screenshot": "screenshots/text_input_10.png"}
-{"type": "scroll", "scrollY": 180, "timestamp": 1725291307.267068, "screenshot": "screenshots/scroll_1.png"}
-{"type": "scroll", "scrollY": 180, "timestamp": 1725291307.386464, "screenshot": "screenshots/scroll_2.png"}
-{"type": "scroll", "scrollY": 180, "timestamp": 1725291307.4957912, "screenshot": "screenshots/scroll_3.png"}
-{"type": "scroll", "scrollY": 180, "timestamp": 1725291307.576239, "screenshot": "screenshots/scroll_4.png"}
-{"type": "scroll", "scrollY": 180, "timestamp": 1725291307.6671731, "screenshot": "screenshots/scroll_5.png"}
-{"type": "click", "xpath": "//span[text()='Submit']", "timestamp": 1725291308.809061, "screenshot": "screenshots/form_submit.png"}
+{"type": "load", "url": "https://docs.google.com/forms/d/e/1FAIpQLSd9gli7KqnYFNkrc_PWNxvmhi7ZJz2jPp0qTsceqT7lkIBo2Q/viewform", "timestamp": 1725382650.018743, "screenshot": "screenshots/page_load.png"}
+{"type": "scroll", "scrollY": 180, "timestamp": 1725382650.183887, "screenshot": "screenshots/scroll_0.png"}
+{"type": "click", "xpath": "//span[text()='I am an existing customer']", "timestamp": 1725382650.65242, "screenshot": "screenshots/element_click_0.png"}
+{"type": "click", "xpath": "//span[text()='Pen']", "timestamp": 1725382650.8840399, "screenshot": "screenshots/element_click_1.png"}
+{"type": "click", "xpath": "//span[text()='Notebook']", "timestamp": 1725382651.215638, "screenshot": "screenshots/element_click_2.png"}
+{"type": "click", "xpath": "//span[text()='Red']", "timestamp": 1725382651.900185, "screenshot": "screenshots/element_click_3.png"}
+{"type": "click", "xpath": "//span[text()='Blue']", "timestamp": 1725382652.245294, "screenshot": "screenshots/element_click_4.png"}
+{"type": "click", "xpath": "//div[text()='4']", "timestamp": 1725382652.644736, "screenshot": "screenshots/element_click_5.png"}
+{"type": "click", "xpath": "//span[text()='Phone']", "timestamp": 1725382653.119822, "screenshot": "screenshots/element_click_6.png"}
+{"type": "click", "xpath": "//span[text()='Email']", "timestamp": 1725382653.359485, "screenshot": "screenshots/element_click_7.png"}
+{"type": "textInput", "xpath": "//input[@type='text' and @aria-labelledby='i46']", "text": "Kavan", "timestamp": 1725382653.796559, "screenshot": "screenshots/text_input_8.png"}
+{"type": "textInput", "xpath": "//input[@type='text' and @aria-labelledby='i50']", "text": "9548565487", "timestamp": 1725382654.14521, "screenshot": "screenshots/text_input_9.png"}
+{"type": "textInput", "xpath": "//input[@type='email' and @aria-labelledby='i54']", "text": "kavan@gmail.com", "timestamp": 1725382654.456811, "screenshot": "screenshots/text_input_10.png"}
+{"type": "scroll", "scrollY": 180, "timestamp": 1725382654.464034, "screenshot": "screenshots/scroll_1.png"}
+{"type": "scroll", "scrollY": 180, "timestamp": 1725382654.582315, "screenshot": "screenshots/scroll_2.png"}
+{"type": "scroll", "scrollY": 180, "timestamp": 1725382654.696382, "screenshot": "screenshots/scroll_3.png"}
+{"type": "scroll", "scrollY": 180, "timestamp": 1725382654.7912881, "screenshot": "screenshots/scroll_4.png"}
+{"type": "scroll", "scrollY": 180, "timestamp": 1725382654.897565, "screenshot": "screenshots/scroll_5.png"}
+{"type": "click", "xpath": "//span[text()='Submit']", "timestamp": 1725382656.029519, "screenshot": "screenshots/form_submit.png"}

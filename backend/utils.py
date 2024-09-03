@@ -7,12 +7,10 @@ import time
 import json
 import os
 
-# Ensure the screenshots directory exists
 os.makedirs("screenshots", exist_ok=True)
 
-# Iterate over each xpath in the list and click the corresponding element
 def click_all_visible_elements(xpaths_options_list, xpaths_text_list, driver, visited):
-    wait = WebDriverWait(driver, 10)  # Adjust the timeout as needed
+    wait = WebDriverWait(driver, 10) 
 
     for i, xpath in enumerate(xpaths_options_list):
         if visited[i] == 0:
@@ -21,12 +19,12 @@ def click_all_visible_elements(xpaths_options_list, xpaths_text_list, driver, vi
                 element.click()
                 visited[i] = 1
                 screenshot_path = f"screenshots/element_click_{i}.png"
-                driver.save_screenshot(screenshot_path)  # Take screenshot
+                driver.save_screenshot(screenshot_path) 
                 log_event({
                     "type": "click",
                     "xpath": xpath,
                     "timestamp": time.time(),
-                    "screenshot": screenshot_path  # Add screenshot path to event
+                    "screenshot": screenshot_path 
                 })
             except (TimeoutException, NoSuchElementException):
                 print(f"Element not interactable or not found: {xpath}")
@@ -39,19 +37,18 @@ def click_all_visible_elements(xpaths_options_list, xpaths_text_list, driver, vi
                 input_element.send_keys(text)
                 visited[i] = 1
                 screenshot_path = f"screenshots/text_input_{i}.png"
-                driver.save_screenshot(screenshot_path)  # Take screenshot
+                driver.save_screenshot(screenshot_path) 
                 log_event({
                     "type": "textInput",
                     "xpath": xpath,
                     "text": text,
                     "timestamp": time.time(),
-                    "screenshot": screenshot_path  # Add screenshot path to event
+                    "screenshot": screenshot_path 
                 })
             except (TimeoutException, NoSuchElementException):
                 print(f"Element not interactable or not found: {xpath}")
 
 def click(xpaths_options_list, xpaths_text_list, form_url):
-    # Clear the events.json file at the start
     with open("events.json", "w") as f:
         f.write("")
 
@@ -65,34 +62,32 @@ def click(xpaths_options_list, xpaths_text_list, form_url):
         "type": "load",
         "url": form_url,
         "timestamp": time.time(),
-        "screenshot": "screenshots/page_load.png"  # Add screenshot path to event
+        "screenshot": "screenshots/page_load.png"  
     })
-    driver.save_screenshot("screenshots/page_load.png")  # Take screenshot after page load
+    driver.save_screenshot("screenshots/page_load.png") 
     for i in range(6):
         driver.execute_script("window.scrollBy(0, 180);")
         log_event({
             "type": "scroll",
             "scrollY": 180,
             "timestamp": time.time(),
-            "screenshot": f"screenshots/scroll_{i}.png"  # Add screenshot path to event
+            "screenshot": f"screenshots/scroll_{i}.png"  
         })
-        driver.save_screenshot(f"screenshots/scroll_{i}.png")  # Take screenshot after scroll
+        driver.save_screenshot(f"screenshots/scroll_{i}.png") 
         click_all_visible_elements(xpaths_options_list, xpaths_text_list, driver, visited)
-    submit_button_xpath = "//span[text()='Submit']"  # Update this XPath as needed
+    submit_button_xpath = "//span[text()='Submit']"  
     
     try:
-        # Wait for the submit button to be clickable
         submit_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, submit_button_xpath))
         )
-        # Click the submit button
         submit_button.click()
-        driver.save_screenshot("screenshots/form_submit.png")  # Take screenshot after form submission
+        driver.save_screenshot("screenshots/form_submit.png")
         log_event({
             "type": "click",
             "xpath": submit_button_xpath,
             "timestamp": time.time(),
-            "screenshot": "screenshots/form_submit.png"  # Add screenshot path to event
+            "screenshot": "screenshots/form_submit.png" 
         })
         print("Form submitted successfully.")
     except TimeoutException:

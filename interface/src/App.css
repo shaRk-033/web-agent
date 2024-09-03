@@ -1,7 +1,7 @@
 .App {
   text-align: center;
-  background-color: #000000; /* Changed background color to pitch black */
-  transition: all 0.3s ease; /* Added transition effect for all elements */
+  background-color: #000000; 
+  transition: all 0.3s ease; 
 }
 
 .App-logo {
@@ -10,19 +10,19 @@
 }
 
 .App-header {
-  background-color: #1e1e2f; /* Darker background for header */
+  background-color: #1e1e2f; 
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: #ffffff; /* White text for better readability */
-  transition: all 0.3s ease; /* Added transition effect for all elements */
+  color: #ffffff; 
+  transition: all 0.3s ease; 
 }
 
 .App-link {
-  color: #ff6f61; /* Softer link color */
+  color: #ff6f61; 
 }
 
 .input-container {
@@ -30,47 +30,46 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  opacity: 1; /* Changed from 0 to 1 to make the input container visible */
-  /* Removed transform and transition properties related to scrolling */
+  opacity: 1; 
 }
 
 .App-input, .App-textarea {
   width: 80%;
   max-width: 500px;
   margin: 10px 0;
-  padding: 12px 15px; /* Increased padding for better aesthetics */
+  padding: 12px 15px; 
   font-size: 1rem;
-  border: 1px solid #343a40; /* Changed border color to a darker shade */
-  border-radius: 8px; /* Increased border radius for rounded corners */
-  background-color: #495057; /* Changed to a darker background color for inputs */
-  color: #ffffff; /* Changed text color to white for better contrast */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
+  border: 1px solid #343a40; 
+  border-radius: 8px; 
+  background-color: #495057; 
+  color: #ffffff; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  transition: border-color 0.3s, box-shadow 0.3s; 
 }
 
 .App-input:focus, .App-textarea:focus {
-  border-color: #80bdff; /* Blue border on focus */
-  box-shadow: 0 0 8px rgba(128, 189, 255, 0.5); /* Glow effect on focus */
+  border-color: #80bdff; 
+  box-shadow: 0 0 8px rgba(128, 189, 255, 0.5); 
 }
 
 .App-input::placeholder, .App-textarea::placeholder {
-  color: #6c757d; /* Softer placeholder color */
+  color: #6c757d; 
 }
 
 .App-button {
-  background-color: #ff6f61; /* Vibrant background color */
-  color: #ffffff; /* White text color */
-  padding: 12px 20px; /* Adequate padding for better aesthetics */
-  border: none; /* Remove default border */
-  border-radius: 8px; /* Rounded corners */
-  font-size: 1rem; /* Standard font size */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+  background-color: #ff6f61; 
+  color: #ffffff; 
+  padding: 12px 20px; 
+  border: none; 
+  border-radius: 8px; 
+  font-size: 1rem; 
+  cursor: pointer; 
+  transition: background-color 0.3s, box-shadow 0.3s; 
 }
 
 .App-button:hover {
-  background-color: #e65b54; /* Slightly darker shade on hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
+  background-color: #e65b54; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
 .App-title {
@@ -90,7 +89,40 @@
   to { opacity: 1; }
 }
 
-
 .App, .App-header, .App-input, .App-textarea, .App-button, .App-title, .App-description {
-  transition: opacity 0.5s ease-in-out; /* Added transition effect for all elements */
+  transition: opacity 0.5s ease-in-out; 
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.success-animation {
+  color: #4CAF50;
+  font-size: 24px;
+  margin-top: 20px;
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.error-animation {
+  color: #FF6347; 
+  font-size: 24px;
+  margin-top: 20px;
+  animation: fadeIn 0.5s;
 }

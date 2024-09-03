@@ -9,7 +9,7 @@ screenshots/
 __pycache__/
 *.py[cod]
 *$py.class
-
+form.html
 # C extensions
 *.so
 
