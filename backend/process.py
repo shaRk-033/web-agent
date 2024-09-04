@@ -9,6 +9,7 @@ from utils import click
 from get_html import get_html
 import re
 import json
+from selenium.common.exceptions import NoSuchElementException, TimeoutException 
 
 load_dotenv()
 
@@ -72,45 +73,62 @@ The JSON format should be like this:
 """
 
 async def process_form(user_info, form_url):
-    visible_html = await asyncio.to_thread(get_html, form_url)
-    
-    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
-    prompt_gemini = generate_prompt_gemini(visible_html)
-    
-    start = time.time()
-    response = await asyncio.to_thread(llm.invoke, prompt_gemini)
-    response_content = response.content
-    print("time taken by gemini", time.time() - start)
-    
-    await asyncio.to_thread(write_to_file, "gemini_response.json", response_content, as_json=True)
+    max_retries = 3  # Maximum number of retries
+    for attempt in range(max_retries):
+        try:
+            visible_html = await asyncio.to_thread(get_html, form_url)
+            
+            llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
+            prompt_gemini = generate_prompt_gemini(visible_html)
+            
+            start = time.time()
+            response = await asyncio.to_thread(llm.invoke, prompt_gemini)
+            response_content = response.content
+            print("time taken by gemini", time.time() - start)
+            
+            await asyncio.to_thread(write_to_file, "gemini_response.json", response_content, as_json=True)
 
-    prompt_to_answer = generate_prompt_to_answer(response_content, user_info)
-    llm2 = ChatOpenAI(model="gpt-4o-mini")
-    answers = await asyncio.to_thread(llm2.invoke, prompt_to_answer)
-    answers_content = answers.content
+            prompt_to_answer = generate_prompt_to_answer(response_content, user_info)
+            llm2 = ChatOpenAI(model="gpt-4o-mini")
+            answers = await asyncio.to_thread(llm2.invoke, prompt_to_answer)
+            answers_content = answers.content
 
-    data = extract_json_from_response(answers_content)
-    if data:
-        await asyncio.to_thread(write_to_file, "answers.json", data, as_json=True)
+            data = extract_json_from_response(answers_content)
+            if data:
+                await asyncio.to_thread(write_to_file, "answers.json", data, as_json=True)
 
-        xpaths_options_list = []
-        xpaths_text_list = {}
+                xpaths_options_list = []
+                xpaths_text_list = {}
 
-        for item in data:
-            question = item.get("question", "")
-            if "selected_options" in item:
-                for option in item["selected_options"]:
-                    xpaths_options_list.append(option["xpath"])
-            elif "text_input" in item and item["text_input"] is not None:
-                xpaths_text_list[item["text_input"]["xpath"]] = item["text_input"]["textcontent"]
+                for item in data:
+                    question = item.get("question", "")
+                    if "selected_options" in item and item["selected_options"] is not None: 
+                        for option in item["selected_options"]:
+                            xpaths_options_list.append(option["xpath"])
+                    elif "text_input" in item and item["text_input"] is not None:
+                        xpaths_text_list[item["text_input"]["xpath"]] = item["text_input"]["textcontent"]
 
-        print("xpaths_options_list =", xpaths_options_list)
-        print("xpaths_text_list =", xpaths_text_list)
+                print("xpaths_options_list =", xpaths_options_list)
+                print("xpaths_text_list =", xpaths_text_list)
 
-        xpaths_data = {
-            "xpaths_options_list": xpaths_options_list,
-            "xpaths_text_list": xpaths_text_list
-        }
-        await asyncio.to_thread(write_to_file, "xpaths.json", xpaths_data, as_json=True)
+                xpaths_data = {
+                    "xpaths_options_list": xpaths_options_list,
+                    "xpaths_text_list": xpaths_text_list
+                }
+                await asyncio.to_thread(write_to_file, "xpaths.json", xpaths_data, as_json=True)
 
-        await asyncio.to_thread(click, xpaths_options_list, xpaths_text_list, form_url)
+                await asyncio.to_thread(click, xpaths_options_list, xpaths_text_list, form_url)
+                
+                verification_html = await asyncio.to_thread(get_html, form_url)
+                if not re.search(r'<button[^>]*type=["\']submit["\'][^>]*>', verification_html, re.IGNORECASE):  # Check for submit button
+                    print("Form submitted successfully, submit button is no longer present.")
+                else:
+                    print("Form submission may not have been successful, submit button is still present.")
+                
+                break  
+        
+        except (NoSuchElementException, TimeoutException) as e:  
+            print(f"Attempt {attempt + 1} failed due to {type(e).__name__}. Retrying...")
+            if attempt == max_retries - 1:
+                print("Max retries reached. Exiting process.")
+                raise  # Re-raise the exception after max retries
