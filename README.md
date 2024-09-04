@@ -25,7 +25,7 @@ Web Agent is an AI-powered tool designed to navigate websites and fill out forms
   ![Web Agent Flow Diagram](flowdiagram.png)
 
 2. Solution 2(using LangChain Agents and Tool calling)
-  ![Tool Callent Agent Diagram](tool_calling_flowdiagram.png)
+  ![Tool Callent Agent Diagram](tool_calling_flowdigram.png)
 
 ## Setup Instructions
 
