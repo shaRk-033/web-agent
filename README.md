@@ -52,3 +52,4 @@ Web Agent is an AI-powered tool designed to navigate websites and fill out forms
 Make sure to set up the necessary environment variables and API keys for the AI models used in the project.
 
 Check out the documentation of the backend in docs.md :)
+:(
